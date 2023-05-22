@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { CirclePicker } from 'react-color';
 
-const ToolBar = ({ setBrushColor }) => {
+const ToolBar = ({ setBrushColor, setMode }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
+
+  const handleModeChange = (changeMode) => {
+    setMode(changeMode);
+  };
 
   const handleColorButtonClick = () => {
     setShowColorPicker(!showColorPicker);
@@ -14,8 +18,8 @@ const ToolBar = ({ setBrushColor }) => {
 
   return (
     <div>
-      <button>Brush</button>
-      <button>Eraser</button>
+      <button onClick={handleModeChange}>Brush</button>
+      <button onClick={handleModeChange}>Eraser</button>
       <button>Stroke</button>
       <button onClick={handleColorButtonClick}>Color</button>
       <button>Undo</button>

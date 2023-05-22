@@ -40,7 +40,7 @@ const Canvas = () => {
 
   return (
     <>
-      <ToolBar setBrushColor={setBrushColor} />
+      <ToolBar setBrushColor={setBrushColor} setMode={setMode} />
       <div>
         Tool:
         <select id='tool' value={mode} onChange={handleModeChange}>
