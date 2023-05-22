@@ -2,17 +2,18 @@ import React, { useState, useRef } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 import ToolBar from './ToolBar';
 
-const DrawingCanvas = () => {
+const Canvas = () => {
   const [isPaint, setIsPaint] = useState(false);
   const [mode, setMode] = useState('brush');
   const [lines, setLines] = useState([]);
   const [currentLine, setCurrentLine] = useState([]);
+  const [brushColor, setBrushColor] = useState('#f44336');
   const stageRef = useRef(null);
 
   const handleMouseDown = (e) => {
     setIsPaint(true);
     const pos = e.target.getStage().getPointerPosition();
-    setCurrentLine([{ x: pos.x, y: pos.y }]);
+    setCurrentLine([{ x: pos.x, y: pos.y, stroke: brushColor }]);
   };
 
   const handleMouseUp = () => {
@@ -27,7 +28,7 @@ const DrawingCanvas = () => {
     const stage = stageRef.current;
     stage.setPointersPositions(e.evt);
     const pos = e.target.getStage().getPointerPosition();
-    setCurrentLine((prevLine) => [...prevLine, { x: pos.x, y: pos.y }]);
+    setCurrentLine((prevLine) => [...prevLine, { x: pos.x, y: pos.y, stroke: brushColor }]);
   };
 
   const handleModeChange = (e) => {
@@ -35,11 +36,11 @@ const DrawingCanvas = () => {
   };
 
   console.log(lines);
-  console.log(currentLine);
+  console.log(brushColor);
 
   return (
     <>
-      <ToolBar />
+      <ToolBar setBrushColor={setBrushColor} />
       <div>
         Tool:
         <select id='tool' value={mode} onChange={handleModeChange}>
@@ -63,7 +64,7 @@ const DrawingCanvas = () => {
             <Line
               key={index}
               points={line.flatMap(({ x, y }) => [x, y])}
-              stroke='#df4b26'
+              stroke={line[0].stroke}
               strokeWidth={5}
               lineCap='round'
               lineJoin='round'
@@ -72,7 +73,7 @@ const DrawingCanvas = () => {
           {currentLine.length > 0 && (
             <Line
               points={currentLine.flatMap(({ x, y }) => [x, y])}
-              stroke='#df4b26'
+              stroke={currentLine[0].stroke}
               strokeWidth={5}
               lineCap='round'
               lineJoin='round'
@@ -84,4 +85,4 @@ const DrawingCanvas = () => {
   );
 };
 
-export default DrawingCanvas;
+export default Canvas;
