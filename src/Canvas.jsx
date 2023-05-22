@@ -1,30 +1,24 @@
 import React, { useState, useRef } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
+import ToolBar from './ToolBar';
 
 const DrawingCanvas = () => {
   const [isPaint, setIsPaint] = useState(false);
   const [mode, setMode] = useState('brush');
   const [lines, setLines] = useState([]);
-  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 });
+  const [currentLine, setCurrentLine] = useState([]);
   const stageRef = useRef(null);
 
   const handleMouseDown = (e) => {
     setIsPaint(true);
     const pos = e.target.getStage().getPointerPosition();
-    setCoordinates({ x: pos.x, y: pos.y });
-    const newLine = {
-      stroke: '#df4b26',
-      strokeWidth: 5,
-      globalCompositeOperation: mode === 'brush' ? 'source-over' : 'destination-out',
-      lineCap: 'round',
-      lineJoin: 'round',
-      points: [pos.x, pos.y, pos.x, pos.y],
-    };
-    setLines((prevLines) => [...prevLines, newLine]);
+    setCurrentLine([{ x: pos.x, y: pos.y }]);
   };
 
   const handleMouseUp = () => {
     setIsPaint(false);
+    setLines((prevLines) => [...prevLines, currentLine]);
+    setCurrentLine([]);
   };
 
   const handleMouseMove = (e) => {
@@ -33,23 +27,19 @@ const DrawingCanvas = () => {
     const stage = stageRef.current;
     stage.setPointersPositions(e.evt);
     const pos = e.target.getStage().getPointerPosition();
-    setCoordinates({ x: pos.x, y: pos.y });
-    setLines((prevLines) => {
-      const updatedLines = [...prevLines];
-      const lastLine = updatedLines[updatedLines.length - 1];
-      lastLine.points = [...lastLine.points, pos.x, pos.y];
-      return updatedLines;
-    });
+    setCurrentLine((prevLine) => [...prevLine, { x: pos.x, y: pos.y }]);
   };
 
   const handleModeChange = (e) => {
     setMode(e.target.value);
   };
 
-  console.log(coordinates);
+  console.log(lines);
+  console.log(currentLine);
 
   return (
     <>
+      <ToolBar />
       <div>
         Tool:
         <select id='tool' value={mode} onChange={handleModeChange}>
@@ -70,13 +60,26 @@ const DrawingCanvas = () => {
       >
         <Layer>
           {lines.map((line, index) => (
-            <Line key={index} {...line} />
+            <Line
+              key={index}
+              points={line.flatMap(({ x, y }) => [x, y])}
+              stroke='#df4b26'
+              strokeWidth={5}
+              lineCap='round'
+              lineJoin='round'
+            />
           ))}
+          {currentLine.length > 0 && (
+            <Line
+              points={currentLine.flatMap(({ x, y }) => [x, y])}
+              stroke='#df4b26'
+              strokeWidth={5}
+              lineCap='round'
+              lineJoin='round'
+            />
+          )}
         </Layer>
       </Stage>
-      <div>
-        Current Coordinates: X: {coordinates.x}, Y: {coordinates.y}
-      </div>
     </>
   );
 };
