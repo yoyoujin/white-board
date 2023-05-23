@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
-import ToolBar from './ToolBar';
+import ToolBar from './ToolBar/ToolBar';
 
 const Canvas = () => {
   const [isPaint, setIsPaint] = useState(false);
