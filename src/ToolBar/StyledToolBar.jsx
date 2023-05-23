@@ -1,12 +1,17 @@
 import styled from 'styled-components';
 
+export const DesignbarWrapper = styled.div`
+  display: flex;
+  z-index: 10;
+`;
+
 export const ToolWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   position: relative;
-  z-index: 1;
+  z-index: 10;
   background-color: #fff;
   width: 70px;
   height: 296px;
@@ -33,15 +38,31 @@ export const SidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
-  z-index: 2;
+  position: relative;
+  z-index: 20;
   top: 0;
-  left: 100px;
+  left: 25px;
   background-color: #fff;
   width: 54px;
   height: 388px;
   padding: 10px 7px;
   border-radius: 5px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 13%;
+    width: 0;
+    height: 0;
+    border: 17px solid transparent;
+    border-bottom-width: 10px;
+    border-top-width: 10px;
+    border-right-color: #fff;
+    border-left: 0;
+    margin-top: -17px;
+    margin-left: -17px;
+  }
 `;
 
 export const StrokeWrapper = styled.div`

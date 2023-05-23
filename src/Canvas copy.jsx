@@ -9,15 +9,12 @@ const Canvas = () => {
   const [currentLine, setCurrentLine] = useState([]);
   const [brushColor, setBrushColor] = useState('#000000');
   const [strokeWidth, setStrokeWidth] = useState('5');
-  const [undoneItem, setUndoneItem] = useState(null);
   const stageRef = useRef(null);
 
   const handleMouseDown = (e) => {
     setIsPaint(true);
     const pos = e.target.getStage().getPointerPosition();
-    setCurrentLine([
-      { x: pos.x, y: pos.y, stroke: brushColor, strokeWidth: strokeWidth, mode: mode },
-    ]);
+    setCurrentLine([{ x: pos.x, y: pos.y, stroke: brushColor, strokeWidth: strokeWidth }]);
   };
 
   const handleMouseUp = () => {
@@ -36,41 +33,17 @@ const Canvas = () => {
     const pos = e.target.getStage().getPointerPosition();
     setCurrentLine((prevLine) => [
       ...prevLine,
-      { x: pos.x, y: pos.y, stroke: brushColor, strokeWidth: strokeWidth, mode: mode },
+      { x: pos.x, y: pos.y, stroke: brushColor, strokeWidth: strokeWidth },
     ]);
   };
 
-  const handleUndo = () => {
-    if (lines.length === 0) {
-      return;
-    }
-
-    const lastItem = lines[lines.length - 1];
-    const updatedLines = lines.slice(0, -1);
-    setLines(updatedLines);
-    setUndoneItem(lastItem);
-  };
-
-  const handleRedo = () => {
-    if (undoneItem) {
-      setLines([...lines, undoneItem]);
-      setUndoneItem(null);
-    }
-  };
-
   console.log(mode);
-  console.log(currentLine);
   console.log(lines);
+  console.log(brushColor);
 
   return (
     <>
-      <ToolBar
-        setBrushColor={setBrushColor}
-        setMode={setMode}
-        setStrokeWidth={setStrokeWidth}
-        handleUndo={handleUndo}
-        handleRedo={handleRedo}
-      />
+      <ToolBar setBrushColor={setBrushColor} setMode={setMode} setStrokeWidth={setStrokeWidth} />
       <Stage
         width={window.innerWidth}
         height={window.innerHeight - 25}
@@ -92,9 +65,7 @@ const Canvas = () => {
               strokeWidth={line[0].strokeWidth}
               lineCap='round'
               lineJoin='round'
-              globalCompositeOperation={
-                line[0].mode === 'eraser' ? 'destination-out' : 'source-over'
-              }
+              //   globalCompositeOperation={mode === 'eraser' ? 'destination-out' : 'source-over'}
             />
           ))}
           {currentLine.length > 0 && (
