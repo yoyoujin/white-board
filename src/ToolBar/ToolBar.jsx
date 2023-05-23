@@ -10,88 +10,97 @@ import strokeBold from '../assets/stroke-bold.svg';
 
 const ToolBar = ({ setBrushColor, setStrokeWidth, setMode, handleUndo, handleRedo }) => {
   const [activeButton, setActiveButton] = useState(null);
+  const [activeStrokeWidth, setActiveStrokeWidth] = useState(null);
+  const [activeColor, setActiveColor] = useState(null);
   const colorArray = ['#000000', '#FFFFFF', '#CF3F41', '#2D66CB', '#E6B649', '#479734'];
+  const strokeWidths = [5, 10, 15];
+  const toolbarButtons = [
+    { tool: 'brush', icon: penIcon },
+    { tool: 'eraser', icon: eraserIcon },
+    { tool: 'undo', icon: undoIcon },
+    { tool: 'redo', icon: redoIcon },
+  ];
+
+  // stroke 굵기 확정되면 수정하기
+  const getStrokeIcon = (width) => {
+    if (width === 5) {
+      return strokeLight;
+    } else if (width === 10) {
+      return strokeMedium;
+    } else if (width === 15) {
+      return strokeBold;
+    }
+    return strokeLight;
+  };
 
   const handleButtonClick = (tool) => {
     if (tool === 'undo') {
       handleUndo();
+      setActiveButton('undo');
     } else if (tool === 'redo') {
       handleRedo();
+      setActiveButton('redo');
     } else {
-      setActiveButton(tool === activeButton ? null : tool);
+      setActiveButton((prevTool) => (prevTool === tool ? null : tool));
       setMode(tool);
     }
   };
 
   const handleColorCircleClick = (color) => {
+    setActiveColor((prevColor) => (prevColor === color ? null : color));
     setBrushColor(color);
   };
 
   const handleStrokeButtonClick = (width) => {
+    setActiveStrokeWidth((prevWidth) => (prevWidth === width ? null : width));
     setStrokeWidth(width);
   };
 
   return (
     <S.DesignbarWrapper>
       <S.ToolWrapper>
-        <button
-          type='button'
-          onClick={() => handleButtonClick('brush')}
-          className={activeButton === 'brush' ? 'active' : ''}
-        >
-          <img src={penIcon} alt='pen' />
-        </button>
-        <button
-          type='button'
-          onClick={() => handleButtonClick('eraser')}
-          className={activeButton === 'eraser' ? 'active' : ''}
-        >
-          <img src={eraserIcon} alt='eraser' />
-        </button>
-        <button
-          type='button'
-          onClick={() => handleButtonClick('undo')}
-          className={activeButton === 'undo' ? 'active' : ''}
-        >
-          <img src={undoIcon} alt='undo' />
-        </button>
-        <button
-          type='button'
-          onClick={() => handleButtonClick('redo')}
-          className={activeButton === 'redo' ? 'active' : ''}
-        >
-          <img src={redoIcon} alt='redo' />
-        </button>
+        {toolbarButtons.map((button) => (
+          <button
+            key={button.tool}
+            type='button'
+            onClick={() => handleButtonClick(button.tool)}
+            className={activeButton === button.tool ? 'active' : ''}
+          >
+            <img src={button.icon} alt={button.tool} />
+          </button>
+        ))}
       </S.ToolWrapper>
 
       {activeButton === 'brush' && (
         <S.SidebarWrapper className='sidebar'>
           <S.StrokeWrapper>
-            <button type='button' onClick={() => handleStrokeButtonClick(5)}>
-              <img src={strokeLight} alt='strokeLight' />
-            </button>
-            <button type='button' onClick={() => handleStrokeButtonClick(10)}>
-              <img src={strokeMedium} alt='strokeMedium' />
-            </button>
-            <button type='button' onClick={() => handleStrokeButtonClick(15)}>
-              <img src={strokeBold} alt='strokeBold' />
-            </button>
+            {strokeWidths.map((width) => (
+              <button
+                key={width}
+                type='button'
+                onClick={() => handleStrokeButtonClick(width)}
+                className={activeStrokeWidth === width ? 'active' : ''}
+              >
+                <img src={getStrokeIcon(width)} alt={`stroke-${width}`} />
+              </button>
+            ))}
           </S.StrokeWrapper>
-          <div>
-            <S.ColorWrapper>
-              {colorArray.map((color, index) => (
-                <S.ColorChip key={index}>
-                  <S.ColorCircle
-                    style={{
-                      backgroundColor: color,
-                      border: color === '#FFFFFF' ? '1px solid #646464' : null,
-                    }}
-                    onClick={() => handleColorCircleClick(color)}
-                  />
-                </S.ColorChip>
-              ))}
-            </S.ColorWrapper>
-          </div>
+          <S.ColorWrapper>
+            {colorArray.map((color, index) => (
+              <S.ColorChip
+                key={index}
+                onClick={() => handleColorCircleClick(color)}
+                className={activeColor === color ? 'active' : ''}
+              >
+                <S.ColorCircle
+                  style={{
+                    backgroundColor: color,
+                    border: color === '#FFFFFF' ? '1px solid #646464' : null,
+                  }}
+                />
+              </S.ColorChip>
+            ))}
+          </S.ColorWrapper>
         </S.SidebarWrapper>
       )}
     </S.DesignbarWrapper>

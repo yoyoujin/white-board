@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 import ToolBar from './ToolBar/ToolBar';
+import * as S from './StyledCanvas';
 
 const Canvas = () => {
   const [isPaint, setIsPaint] = useState(false);
@@ -22,9 +23,7 @@ const Canvas = () => {
 
   const handleMouseUp = () => {
     setIsPaint(false);
-    const endPoint = currentLine[currentLine.length - 1];
-    const updatedLines = [...lines, [...currentLine, endPoint]];
-    setLines(updatedLines);
+    setLines((prevLines) => [...prevLines, currentLine]);
     setCurrentLine([]);
   };
 
@@ -58,22 +57,22 @@ const Canvas = () => {
     }
   };
 
-  console.log(mode);
-  console.log(currentLine);
   console.log(lines);
 
   return (
-    <>
-      <ToolBar
-        setBrushColor={setBrushColor}
-        setMode={setMode}
-        setStrokeWidth={setStrokeWidth}
-        handleUndo={handleUndo}
-        handleRedo={handleRedo}
-      />
+    <S.WhiteboardWrapper>
+      <S.ToolbarWrapper>
+        <ToolBar
+          setBrushColor={setBrushColor}
+          setMode={setMode}
+          setStrokeWidth={setStrokeWidth}
+          handleUndo={handleUndo}
+          handleRedo={handleRedo}
+        />
+      </S.ToolbarWrapper>
       <Stage
         width={window.innerWidth}
-        height={window.innerHeight - 25}
+        height={window.innerHeight}
         onMouseDown={handleMouseDown}
         onTouchStart={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -81,7 +80,7 @@ const Canvas = () => {
         onMouseUp={handleMouseUp}
         onTouchEnd={handleMouseUp}
         ref={stageRef}
-        style={{ backgroundColor: 'pink' }}
+        style={{ backgroundColor: '#494949' }}
       >
         <Layer>
           {lines.map((line, index) => (
@@ -109,7 +108,7 @@ const Canvas = () => {
           )}
         </Layer>
       </Stage>
-    </>
+    </S.WhiteboardWrapper>
   );
 };
 

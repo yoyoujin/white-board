@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const DesignbarWrapper = styled.div`
   display: flex;
-  z-index: 10;
 `;
 
 export const ToolWrapper = styled.div`
@@ -10,8 +9,6 @@ export const ToolWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  z-index: 10;
   background-color: #fff;
   width: 70px;
   height: 296px;
@@ -39,7 +36,6 @@ export const SidebarWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  z-index: 20;
   top: 0;
   left: 25px;
   background-color: #fff;
@@ -63,6 +59,11 @@ export const SidebarWrapper = styled.div`
     margin-top: -17px;
     margin-left: -17px;
   }
+
+  .active {
+    background-color: #ebf0ff;
+    border-radius: 5px;
+  }
 `;
 
 export const StrokeWrapper = styled.div`
@@ -78,6 +79,15 @@ export const StrokeWrapper = styled.div`
   button {
     width: 30px;
     height: 30px;
+    &:hover {
+      background-color: #ededed;
+      border-radius: 5px;
+    }
+
+    &.active {
+      background-color: #ebf0ff;
+      border-radius: 5px;
+    }
   }
 `;
 
@@ -102,10 +112,19 @@ export const ColorChip = styled.li`
     background-color: #ededed;
     border-radius: 5px;
   }
+  &.active {
+    background-color: #ebf0ff;
+    border-radius: 5px;
+  }
 `;
 
 export const ColorCircle = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
+
+  &.active {
+    background-color: #ebf0ff;
+    border-radius: 50%;
+  }
 `;
