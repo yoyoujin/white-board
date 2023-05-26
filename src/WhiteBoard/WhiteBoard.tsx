@@ -1,42 +1,69 @@
+import { KonvaEventObject } from 'konva/lib/Node';
 import React, { useState, useRef } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
-import ToolBar from './ToolBar/ToolBar';
-import * as S from './StyledCanvas';
+// import { io, Socket } from 'socket.io-client';
+import ToolBar from '../ToolBar/ToolBar';
+import * as S from './StyledWhiteBoard';
 
-const Canvas = () => {
-  const [isPaint, setIsPaint] = useState(false);
-  const [mode, setMode] = useState('brush');
-  const [lines, setLines] = useState([]);
-  const [currentLine, setCurrentLine] = useState([]);
-  const [brushColor, setBrushColor] = useState('#000000');
-  const [strokeWidth, setStrokeWidth] = useState('5');
-  const [undoneItem, setUndoneItem] = useState(null);
-  const stageRef = useRef(null);
+interface Lines {
+  x: number;
+  y: number;
+  stroke: string;
+  strokeWidth: number;
+  mode: string;
+}
 
-  const handleMouseDown = (e) => {
-    setIsPaint(true);
-    const pos = e.target.getStage().getPointerPosition();
+const WhiteBoard: React.FC = () => {
+  const [isDraw, setIsDraw] = useState(false);
+  const [mode, setMode] = useState('pen');
+  const [lines, setLines] = useState<Lines[][]>([]);
+  const [currentLine, setCurrentLine] = useState<Lines[]>([]);
+  const [penColor, setPenColor] = useState<string>('#000000');
+  const [strokeWidth, setStrokeWidth] = useState<number>(5);
+  const [undoneItem, setUndoneItem] = useState<Lines[] | null>(null);
+  const stageRef = useRef<any>(null);
+  // const socketRef = useRef<Socket | null>(null);
+
+  // useEffect(() => {
+  //   //마운트될 때 서버에 연결하고, 언마운트될 때 연결 해제
+  //   socketRef.current = io();
+
+  //   return () => {
+  //     socketRef.current?.disconnect();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   // lines 업데이트될 때마다 서버로 전송
+  //   socketRef.current?.emit('updatedLine', lines);
+  // }, [lines]);
+
+  const handleMouseDown = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
+    setIsDraw(true);
+    const pos = e.target.getStage()?.getPointerPosition() ?? { x: 0, y: 0 };
     setCurrentLine([
-      { x: pos.x, y: pos.y, stroke: brushColor, strokeWidth: strokeWidth, mode: mode },
+      { x: pos.x, y: pos.y, stroke: penColor, strokeWidth: strokeWidth, mode: mode },
     ]);
   };
 
   const handleMouseUp = () => {
-    setIsPaint(false);
+    setIsDraw(false);
     setLines((prevLines) => [...prevLines, currentLine]);
     setCurrentLine([]);
   };
 
-  const handleMouseMove = (e) => {
-    if (!isPaint) return;
+  const handleMouseMove = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
+    if (!isDraw) return;
 
     const stage = stageRef.current;
-    stage.setPointersPositions(e.evt);
-    const pos = e.target.getStage().getPointerPosition();
-    setCurrentLine((prevLine) => [
-      ...prevLine,
-      { x: pos.x, y: pos.y, stroke: brushColor, strokeWidth: strokeWidth, mode: mode },
-    ]);
+    if (stage) {
+      stage.setPointersPositions(e.evt);
+      const pos = e.target.getStage()?.getPointerPosition() ?? { x: 0, y: 0 };
+      setCurrentLine((prevLine) => [
+        ...prevLine,
+        { x: pos.x, y: pos.y, stroke: penColor, strokeWidth: strokeWidth, mode: mode },
+      ]);
+    }
   };
 
   const handleUndo = () => {
@@ -63,7 +90,7 @@ const Canvas = () => {
     <S.WhiteboardWrapper>
       <S.ToolbarWrapper>
         <ToolBar
-          setBrushColor={setBrushColor}
+          setPenColor={setPenColor}
           setMode={setMode}
           setStrokeWidth={setStrokeWidth}
           handleUndo={handleUndo}
@@ -112,4 +139,4 @@ const Canvas = () => {
   );
 };
 
-export default Canvas;
+export default WhiteBoard;

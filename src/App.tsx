@@ -1,13 +1,10 @@
 import React from 'react';
-import './App.css';
-import Canvas from './Canvas';
-import WhiteBoard from './WhiteBoard';
+import WhiteBoard from './WhiteBoard/WhiteBoard';
 
 function App() {
   return (
     <>
-      {/* <WhiteBoard /> */}
-      <Canvas />
+      <WhiteBoard />
     </>
   );
 }

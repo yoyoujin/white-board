@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import * as S from './StyledToolBar';
 import eraserIcon from '../assets/eraser.svg';
 import penIcon from '../assets/pen.svg';
 import redoIcon from '../assets/redo.svg';
@@ -7,22 +6,37 @@ import undoIcon from '../assets/undo.svg';
 import strokeLight from '../assets/stroke-light.svg';
 import strokeMedium from '../assets/stroke-medium.svg';
 import strokeBold from '../assets/stroke-bold.svg';
+import * as S from './StyledToolBar';
 
-const ToolBar = ({ setBrushColor, setStrokeWidth, setMode, handleUndo, handleRedo }) => {
-  const [activeButton, setActiveButton] = useState(null);
-  const [activeStrokeWidth, setActiveStrokeWidth] = useState(null);
-  const [activeColor, setActiveColor] = useState(null);
+interface OwnProps {
+  setPenColor(color: string): void;
+  setStrokeWidth(width: number): void;
+  setMode(mode: string): void;
+  handleUndo(): void;
+  handleRedo(): void;
+}
+
+const ToolBar: React.FC<OwnProps> = ({
+  setPenColor,
+  setStrokeWidth,
+  setMode,
+  handleUndo,
+  handleRedo,
+}) => {
+  const [activeButton, setActiveButton] = useState<string | null>(null);
+  const [activeStrokeWidth, setActiveStrokeWidth] = useState<number | null>(null);
+  const [activeColor, setActiveColor] = useState<string | null>(null);
   const colorArray = ['#000000', '#FFFFFF', '#CF3F41', '#2D66CB', '#E6B649', '#479734'];
   const strokeWidths = [5, 10, 15];
   const toolbarButtons = [
-    { tool: 'brush', icon: penIcon },
+    { tool: 'pen', icon: penIcon },
     { tool: 'eraser', icon: eraserIcon },
     { tool: 'undo', icon: undoIcon },
     { tool: 'redo', icon: redoIcon },
   ];
 
-  // stroke 굵기 확정되면 수정하기
-  const getStrokeIcon = (width) => {
+  // stroke 굵기 확정 후 수정하기
+  const getStrokeIcon = (width: number): string => {
     if (width === 5) {
       return strokeLight;
     } else if (width === 10) {
@@ -33,7 +47,7 @@ const ToolBar = ({ setBrushColor, setStrokeWidth, setMode, handleUndo, handleRed
     return strokeLight;
   };
 
-  const handleButtonClick = (tool) => {
+  const handleButtonClick = (tool: string): void => {
     if (tool === 'undo') {
       handleUndo();
       setActiveButton('undo');
@@ -46,12 +60,12 @@ const ToolBar = ({ setBrushColor, setStrokeWidth, setMode, handleUndo, handleRed
     }
   };
 
-  const handleColorCircleClick = (color) => {
+  const handleColorCircleClick = (color: string): void => {
     setActiveColor((prevColor) => (prevColor === color ? null : color));
-    setBrushColor(color);
+    setPenColor(color);
   };
 
-  const handleStrokeButtonClick = (width) => {
+  const handleStrokeButtonClick = (width: number): void => {
     setActiveStrokeWidth((prevWidth) => (prevWidth === width ? null : width));
     setStrokeWidth(width);
   };
@@ -71,7 +85,7 @@ const ToolBar = ({ setBrushColor, setStrokeWidth, setMode, handleUndo, handleRed
         ))}
       </S.ToolWrapper>
 
-      {activeButton === 'brush' && (
+      {activeButton === 'pen' && (
         <S.SidebarWrapper className='sidebar'>
           <S.StrokeWrapper>
             {strokeWidths.map((width) => (
@@ -95,7 +109,7 @@ const ToolBar = ({ setBrushColor, setStrokeWidth, setMode, handleUndo, handleRed
                 <S.ColorCircle
                   style={{
                     backgroundColor: color,
-                    border: color === '#FFFFFF' ? '1px solid #646464' : null,
+                    border: color === '#FFFFFF' ? '1px solid #646464' : undefined,
                   }}
                 />
               </S.ColorChip>
@@ -104,11 +118,6 @@ const ToolBar = ({ setBrushColor, setStrokeWidth, setMode, handleUndo, handleRed
         </S.SidebarWrapper>
       )}
     </S.DesignbarWrapper>
-
-    // <button type='button' onClick={handleColorButtonClick}>
-    //   Color
-    // </button>
-    // {showColorPicker && <CirclePicker onChangeComplete={handleChange} />}
   );
 };
 
