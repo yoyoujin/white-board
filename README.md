@@ -26,7 +26,7 @@
 
 ## :: 고민
 
-💡 삽질기록 블로그글 - [화이트보드, 그 여정과 새싹톤 도전기](https://velog.io/@yjinhann)
+💡 삽질기록 블로그글 - [화이트보드, 그 여정과 새싹톤 도전기](https://velog.io/@yjinhann/React-Konva-%ED%99%94%EC%9D%B4%ED%8A%B8%EB%B3%B4%EB%93%9C-%EA%B7%B8-%EC%97%AC%EC%A0%95)
 
 1. Undo / Redo
 
