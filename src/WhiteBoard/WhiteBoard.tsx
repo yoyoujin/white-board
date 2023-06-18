@@ -84,8 +84,6 @@ const WhiteBoard: React.FC = () => {
     }
   };
 
-  console.log(lines);
-
   return (
     <S.WhiteboardWrapper>
       <S.ToolbarWrapper>
