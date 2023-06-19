@@ -2,6 +2,7 @@
 
 - 'react-konva' 라이브러리 사용하여 캔버스 기반의 화이트보드 구현
 - 화이트보드 내 ToolBar는 피그마 디자인 확인하여 진행<br>
+- [DEMO](https://white-board-ten.vercel.app/)
   <br>
   ![image](https://github.com/yoyoujin/white-board/assets/102464638/a97d9846-84e2-4db9-8e75-9ad4b2922d14)
 
